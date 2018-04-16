@@ -6,6 +6,12 @@ MQTT_IP_ADDR = "localhost"
 MQTT_PORT = 1883
 MQTT_ADDR = "{}:{}".format(MQTT_IP_ADDR, str(MQTT_PORT))
 
+
+INTENT_START_QUIZ = "start_lesson"
+INTENT_ANSWER = "give_answer"
+INTENT_INTERRUPT = "interrupt"
+INTENT_DOES_NOT_KNOW = "does_not_know"
+
 INTENT_FILTER_GET_ANSWER = [
     "give_answer",
     "interrupt",
@@ -15,7 +21,7 @@ INTENT_FILTER_GET_ANSWER = [
 SessionsStates = {}
 
 
-def user_request_quizz(hermes, intentMessage):
+def user_request_quiz(hermes, intentMessage):
     print("User is asking for a quizz")
 
     state = tt.start_quizz(intentMessage.slots.get("number"), intentMessage.slots.get("tables"))
@@ -26,6 +32,7 @@ def user_request_quizz(hermes, intentMessage):
 
 
 def user_gives_answer(hermes, intentMessage):
+    assert 0 == 1
     assert intentMessage.intent == "give_answer"
     print("User is giving an answer")
 
@@ -60,14 +67,9 @@ def user_quits(hermes, intentMessage):
 
 
 with Hermes(MQTT_ADDR) as h:
-    # h.subscribe_intent("start_lesson", user_request_quizz) \
-    #     .subscribe_intent("interrupt", user_quits) \
-    #     .subscribe_intent("does_not_know", user_does_not_know) \
-    #     .subscribe_intent("give_answer", user_gives_answer) \
-    #     .start()
 
-    h.subscribe_intents("start_lesson", user_request_quizz) \
-        .subscribe_intent("interrupt", user_quits) \
-        .subscribe_intent("does_not_know", user_does_not_know) \
-        .subscribe_intent("give_answer", user_gives_answer) \
+    h.subscribe_intent(INTENT_START_QUIZ, user_request_quiz) \
+        .subscribe_intent(INTENT_INTERRUPT, user_quits) \
+        .subscribe_intent(INTENT_DOES_NOT_KNOW, user_does_not_know) \
+        .subscribe_intent(INTENT_ANSWER, user_gives_answer) \
         .start()
