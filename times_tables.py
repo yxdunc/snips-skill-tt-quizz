@@ -24,7 +24,7 @@ def start_quizz(nb_questions=5, tables=[]):
 
 def check_user_answer(session_state, answer):
     if session_state is None:
-        print "Error: session_state is None":user_does_not_know()
+        print "Error: session_state is None"
         return _create_next_step("There is an error", {})
     correction_sentence, is_correct = _generate_correction(session_state.get("x"), session_state.get("y"), answer)
 
