@@ -23,6 +23,9 @@ def start_quizz(nb_questions=5, tables=[]):
 
 
 def check_user_answer(session_state, answer):
+    if session_state is None:
+        print "Error: session_state is None":user_does_not_know()
+        return _create_next_step("There is an error", {})
     correction_sentence, is_correct = _generate_correction(session_state.get("x"), session_state.get("y"), answer)
 
     if is_correct: session_state["good"] += 1
@@ -77,6 +80,8 @@ def remove_session_state(sessions_states, session_id):
 
 
 def _generate_correction(x, y, user_answer):
+    if x is None or y is None or user_answer is None:
+        return "I m having some issue checking for your answer"
     result = x * y
     sentence = "That's it. Well done."
     is_correct = True

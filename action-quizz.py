@@ -14,6 +14,7 @@ INTENT_FILTER_GET_ANSWER = [
 
 SessionsStates = {}
 
+
 def user_request_quizz(hermes, intentMessage):
     print("User is asking for a quizz")
 
@@ -25,6 +26,7 @@ def user_request_quizz(hermes, intentMessage):
 
 
 def user_gives_answer(hermes, intentMessage):
+    assert intentMessage.intent == "give_answer"
     print("User is giving an answer")
 
     state = tt.check_user_answer(SessionsStates.get(intentMessage.session_id), intentMessage.slots.get("answer"))
@@ -58,7 +60,13 @@ def user_quits(hermes, intentMessage):
 
 
 with Hermes(MQTT_ADDR) as h:
-    h.subscribe_intent("start_lesson", user_request_quizz) \
+    # h.subscribe_intent("start_lesson", user_request_quizz) \
+    #     .subscribe_intent("interrupt", user_quits) \
+    #     .subscribe_intent("does_not_know", user_does_not_know) \
+    #     .subscribe_intent("give_answer", user_gives_answer) \
+    #     .start()
+
+    h.subscribe_intents("start_lesson", user_request_quizz) \
         .subscribe_intent("interrupt", user_quits) \
         .subscribe_intent("does_not_know", user_does_not_know) \
         .subscribe_intent("give_answer", user_gives_answer) \
