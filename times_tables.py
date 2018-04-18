@@ -16,11 +16,10 @@ def start_quizz(nb_questions=5, tables=[]):
         "bad": 0,
         "step": 0,
         "tables": tables,
-        "nb_questions": nb_questions,
-        "question": _create_question(x, y, "")
+        "nb_questions": nb_questions
     }
 
-    return session_state
+    return session_state, _create_question(x, y, "")
 
 
 def check_user_answer(session_state, answer):
