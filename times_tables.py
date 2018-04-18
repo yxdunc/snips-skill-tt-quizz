@@ -43,8 +43,9 @@ def user_does_not_know(session_id, sessions_states):
     session_state = sessions_states.get(session_id)
     answer = session_state["x"] * session_state["y"]
 
-    return _create_next_step("That's ok don't worry, the answer was " + str(answer), session_state)
+    next_step = _create_next_step("That's ok don't worry, the answer was " + str(answer), session_state)
 
+    return next_step["sentence"], next_step["continues"]
 
 def terminate_early(sessions_states, session_id):
     remove_session_state(sessions_states, session_id)
