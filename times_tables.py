@@ -26,12 +26,12 @@ def check_user_answer(session_state, answer):
     if session_state is None:
         print "Error: session_state is None"
         return _create_next_step("There is an error", {})
-    correction_sentence, is_correct = _generate_correction(session_state.get("x"), session_state.get("y"), answer)
+    correction = _generate_correction(session_state.get("x"), session_state.get("y"), answer)
 
-    if is_correct: session_state["good"] += 1
-    if not is_correct: session_state["bad"] += 1
+    if correction["is_correct"]: session_state["good"] += 1
+    if not correction["is_correct"]: session_state["bad"] += 1
 
-    return _create_next_step(correction_sentence, session_state)
+    return _create_next_step(correction["sentence"], session_state)
 
 
 def user_does_not_know(session_id, sessions_states):
@@ -90,7 +90,7 @@ def _generate_correction(x, y, user_answer):
         sentence = "Oh no, wrong answer. {} times {} is equal to {}".format(x, y, result)
         is_correct = False
 
-    return sentence, is_correct
+    return dict(sentence=sentence, is_correct=is_correct)
 
 
 def _set_not_none_dict_value(to_update, update):

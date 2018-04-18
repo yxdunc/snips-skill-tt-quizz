@@ -34,7 +34,7 @@ def user_request_quiz(hermes, intentMessage):
 def user_gives_answer(hermes, intentMessage):
     print("User is giving an answer")
 
-    state = tt.check_user_answer(SessionsStates.get(intentMessage.session_id), intentMessage.slots.answer)
+    state = tt.check_user_answer(SessionsStates.get(intentMessage.session_id), intentMessage.slots.answer.value.value)
 
     if not state["continues"]:
         hermes.publish_end_session(intentMessage.session_id, state["sentence"])
@@ -47,7 +47,7 @@ def user_gives_answer(hermes, intentMessage):
 def user_does_not_know(hermes, intentMessage):
     print("User does not know the answer")
 
-    state = tt.user_does_not_know(SessionsStates[intentMessage.session_id], intentMessage.slots.answer)
+    state = tt.user_does_not_know(SessionsStates[intentMessage.session_id], intentMessage.slots.answer.value.value)
 
     if not state["continues"]:
         hermes.publish_end_session(intentMessage.session_id, state["sentence"])
