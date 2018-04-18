@@ -7,7 +7,7 @@ def start_quizz(nb_questions=5, tables=[]):
 
     if tables:
         tables = map(int, tables)
-        y = tables[random.randint(0, len(tables))]
+        y = tables[random.randint(0, len(tables) - 1)]
 
     session_state = {
         "x": x,
@@ -57,7 +57,7 @@ def _create_next_step(sentence, session_state):
 
         if session_state.get("tables") is not None:
             tables = session_state["tables"]
-            session_state["y"] = tables[random.randint(0, len(tables))]
+            session_state["y"] = tables[random.randint(0, len(tables) - 1)]
 
         sentence = _create_question(session_state["x"], session_state["y"], sentence)
         session_state["step"] += 1
