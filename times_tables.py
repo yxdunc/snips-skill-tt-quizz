@@ -96,10 +96,10 @@ def _generate_correction(session_state, user_answer):
 
     result = x * y
 
-    else if result == user_answer:
+    if result == user_answer:
         sentence = "That's it. Well done."
         session_state["good"] += 1
-    else if result != user_answer:
+    elif result != user_answer:
         sentence = "Oh no, wrong answer. {} times {} is equal to {}".format(x, y, result)
         session_state["bad"] += 1
 
