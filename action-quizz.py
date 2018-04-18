@@ -23,6 +23,7 @@ SessionsStates = {}
 
 def user_request_quiz(hermes, intentMessage):
     print("User is asking for a quizz")
+    print("User is asking for a quizz {} ==> {}").format(intentMessage.slots.tables, intentMessage.slots.number)
 
     session_state = tt.start_quizz(intentMessage.slots.number.value.value, [intentMessage.slots.tables.value.value])
 
