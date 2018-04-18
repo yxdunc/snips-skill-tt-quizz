@@ -32,8 +32,6 @@ def user_request_quiz(hermes, intentMessage):
 
 
 def user_gives_answer(hermes, intentMessage):
-    assert 0 == 1
-    assert intentMessage.intent == INTENT_ANSWER
     print("User is giving an answer")
 
     state = tt.check_user_answer(SessionsStates.get(intentMessage.session_id), intentMessage.slots.answer)
