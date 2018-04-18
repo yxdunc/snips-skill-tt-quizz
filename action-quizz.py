@@ -33,8 +33,10 @@ def user_request_quiz(hermes, intentMessage):
 
 def user_gives_answer(hermes, intentMessage):
     print("User is giving an answer")
+    state = dict(sentence="",continues=True)
 
-    state = tt.check_user_answer(SessionsStates.get(intentMessage.session_id), intentMessage.slots.answer.value.value)
+    if intentMessage.slots.answer:
+        state = tt.check_user_answer(SessionsStates.get(intentMessage.session_id), intentMessage.slots.answer.value.value)
 
     if not state["continues"]:
         hermes.publish_end_session(intentMessage.session_id, state["sentence"])
