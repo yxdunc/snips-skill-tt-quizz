@@ -1,7 +1,7 @@
 import random
 
 
-def start_quizz(nb_questions=5, tables=[]):
+def start_quiz(nb_questions=5, tables=[]):
     x = random.randint(0, 12)
     y = random.randint(0, 12)
 
@@ -27,7 +27,7 @@ def check_user_answer(session_state, answer):
         print "Error: session_state is None"
         return session_state, "There is an error", False
 
-    ### We just try keep listening to the user until we get an answer
+    # We just try keep listening to the user until we get an answer
     if answer is None:
         return session_state, "", True
 
@@ -48,6 +48,7 @@ def user_does_not_know(session_id, sessions_states):
     next_step = _create_next_step("That's ok don't worry, the answer was " + str(answer), session_state)
 
     return next_step["sentence"], next_step["continues"]
+
 
 def terminate_early(sessions_states, session_id):
     remove_session_state(sessions_states, session_id)
