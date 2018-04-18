@@ -25,13 +25,15 @@ def start_quizz(nb_questions=5, tables=[]):
 def check_user_answer(session_state, answer):
     if session_state is None:
         print "Error: session_state is None"
-        return _create_next_step("There is an error", {})
-    correction = _generate_correction(session_state.get("x"), session_state.get("y"), answer)
+        return session_state, "There is an error", False
 
-    if correction["is_correct"]: session_state["good"] += 1
-    if not correction["is_correct"]: session_state["bad"] += 1
+    ### We just try keep listening to the user until we get an answer
+    if answer is None:
+        return session_state, "", True
 
-    next_step = _create_next_step(correction["sentence"], session_state)
+    correction_sentence = _generate_correction(session_state, answer)
+
+    next_step = _create_next_step(correction_sentence, session_state)
 
     return next_step["session_state"], next_step["sentence"], next_step["continues"]
 
@@ -82,18 +84,26 @@ def remove_session_state(sessions_states, session_id):
     sessions_states[session_id] = None
 
 
-def _generate_correction(x, y, user_answer):
-    if x is None or y is None or user_answer is None:
-        return "I m having some issue checking for your answer"
+def _generate_correction(session_state, user_answer):
+    x = session_state["x"]
+    y = session_state["y"]
+
+    if x is None or y is None:
+        raise ValueError("There is some missing info about the question asked")
+
+    if user_answer is None:
+        return ""
+
     result = x * y
-    sentence = "That's it. Well done."
-    is_correct = True
 
-    if result != user_answer:
+    else if result == user_answer:
+        sentence = "That's it. Well done."
+        session_state["good"] += 1
+    else if result != user_answer:
         sentence = "Oh no, wrong answer. {} times {} is equal to {}".format(x, y, result)
-        is_correct = False
+        session_state["bad"] += 1
 
-    return dict(sentence=sentence, is_correct=is_correct)
+    return sentence
 
 
 def _set_not_none_dict_value(to_update, update):
