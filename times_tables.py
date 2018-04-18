@@ -37,7 +37,7 @@ def check_user_answer(session_state, answer):
 def user_does_not_know(session_id, sessions_states):
     if session_id is None or sessions_states.get(session_id) is None:
         print "[WARNING] No current game on this session id"
-        return
+        raise ValueError('[ERROR] A session should be associated with this session ID.')
     session_state = sessions_states.get(session_id)
     answer = session_state["x"] * session_state["y"]
 
