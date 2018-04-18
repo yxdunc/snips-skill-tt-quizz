@@ -47,7 +47,7 @@ def user_gives_answer(hermes, intentMessage):
 def user_does_not_know(hermes, intentMessage):
     print("User does not know the answer")
 
-    state = tt.user_does_not_know(SessionsStates[intentMessage.session_id], intentMessage.slots.answer.value.value)
+    state = tt.user_does_not_know(intentMessage.session_id, SessionsStates[intentMessage.session_id])
 
     if not state["continues"]:
         hermes.publish_end_session(intentMessage.session_id, state["sentence"])
