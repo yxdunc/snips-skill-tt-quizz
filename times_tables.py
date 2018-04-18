@@ -32,7 +32,9 @@ def check_user_answer(session_state, answer):
     if correction["is_correct"]: session_state["good"] += 1
     if not correction["is_correct"]: session_state["bad"] += 1
 
-    return _create_next_step(correction["sentence"], session_state)
+    next_step = _create_next_step(correction["sentence"], session_state)
+
+    return next_step["session_state"], next_step["sentence"], next_step["continues"]
 
 
 def user_does_not_know(session_id, sessions_states):
@@ -51,7 +53,7 @@ def terminate_early(sessions_states, session_id):
 
 
 def _create_next_step(sentence, session_state):
-    if session_state.get("step") < session_state.get("nb_questions"):
+    if session_state.get("step") <= session_state.get("nb_questions"):
         session_state["x"] = random.randint(0, 11)
         session_state["y"] = random.randint(0, 11)
 

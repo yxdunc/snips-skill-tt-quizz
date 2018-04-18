@@ -23,42 +23,53 @@ SessionsStates = {}
 
 def user_request_quiz(hermes, intentMessage):
     print("User is asking for a quizz")
+    number_of_questions = 1
+    tables = []
 
-    session_state = tt.start_quizz(intentMessage.slots.number.value.value, [intentMessage.slots.table.value.value])
+    if intentMessage.slots.number:
+        number_of_questions = intentMessage.slots.number.value.value
+    if intentMessage.slots.table:
+        tables = [intentMessage.slots.table.value.value]
+
+    session_state, sentence = tt.start_quizz(number_of_questions, tables)
 
     tt.save_session_state(SessionsStates, intentMessage.session_id, session_state)
 
-    hermes.publish_continue_session(intentMessage.session_id, session_state["question"], INTENT_FILTER_GET_ANSWER)
+    hermes.publish_continue_session(intentMessage.session_id, sentence, INTENT_FILTER_GET_ANSWER)
 
 
 def user_gives_answer(hermes, intentMessage):
     print("User is giving an answer")
 
-    result = dict(sentence="",continues=True)
+    answer = None
+    session_id = intentMessage.session_id
+    session_state = SessionsStates.get(session_id)
 
     if intentMessage.slots.answer:
-        result = tt.check_user_answer(SessionsStates.get(intentMessage.session_id),
-                                      intentMessage.slots.answer.value.value)
+        answer = intentMessage.slots.answer.value.value
 
-    if not result["continues"]:
-        hermes.publish_end_session(intentMessage.session_id, result["sentence"])
-        tt.remove_session_state(SessionsStates, intentMessage.session_id)
+    session_state, sentence, continues = tt.check_user_answer(session_state, answer)
+
+    if not continues:
+        hermes.publish_end_session(session_id, sentence)
+        tt.remove_session_state(SessionsStates, session_id)
         return
 
-    hermes.publish_continue_session(intentMessage.session_id, result["sentence"], INTENT_FILTER_GET_ANSWER)
+    hermes.publish_continue_session(session_id, sentence, INTENT_FILTER_GET_ANSWER)
 
 
 def user_does_not_know(hermes, intentMessage):
     print("User does not know the answer")
+    session_id = intentMessage.session_id
 
-    state = tt.user_does_not_know(intentMessage.session_id, SessionsStates)
+    sentence, continues = tt.user_does_not_know(session_id, SessionsStates)
 
-    if not state.get("continues"):
-        hermes.publish_end_session(intentMessage.session_id, state["sentence"])
-        tt.remove_session_state(SessionsStates, intentMessage.session_id)
+    if not continues:
+        hermes.publish_end_session(session_id, sentence)
+        tt.remove_session_state(SessionsStates, session_id)
         return
 
-    hermes.publish_continue_session(intentMessage.session_id, state["sentence"], INTENT_FILTER_GET_ANSWER)
+    hermes.publish_continue_session(session_id, sentence, INTENT_FILTER_GET_ANSWER)
 
 
 def user_quits(hermes, intentMessage):
@@ -67,8 +78,6 @@ def user_quits(hermes, intentMessage):
 
     hermes.publish_end_session(session_id, tt.terminate_early(SessionsStates, session_id))
 
-def logger(hermes, intentMessage):
-    print "Hello World"
 
 with Hermes(MQTT_ADDR) as h:
 
