@@ -56,7 +56,9 @@ def terminate_early(sessions_states, session_id):
 
 
 def _create_next_step(sentence, session_state):
-    if session_state.get("step") <= session_state.get("nb_questions"):
+    session_state["step"] += 1
+
+    if session_state.get("step") < session_state.get("nb_questions"):
         session_state["x"] = random.randint(0, 11)
         session_state["y"] = random.randint(0, 11)
 
@@ -65,7 +67,6 @@ def _create_next_step(sentence, session_state):
             session_state["y"] = tables[random.randint(0, len(tables) - 1)]
 
         sentence = _create_question(session_state["x"], session_state["y"], sentence)
-        session_state["step"] += 1
         continues = True
     else:
         sentence += " You had " + str(session_state["good"]) + " good answers and " + str(
