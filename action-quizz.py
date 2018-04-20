@@ -99,7 +99,7 @@ def session_started(hermes, session_started_message):
 def session_ended(hermes, session_ended_message):
     print("Session Ended")
     session_id = session_ended_message.session_id
-    session_site_id = session_ended_message.session_site_id
+    session_site_id = session_ended_message.site_id
 
     if SessionsStates.get(session_id):
         init = dict(
