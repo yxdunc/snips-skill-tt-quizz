@@ -108,7 +108,7 @@ def session_ended(hermes, session_ended_message):
             canBeEnqueued=False,
             intentFilter=INTENT_FILTER_GET_ANSWER
         )
-        hermes.publish_start_session(session_site_id, "action", init, session_id)
+        hermes.publish_start_session(session_site_id, "action", init, str(session_id))
 
 
 with Hermes(MQTT_ADDR) as h:
