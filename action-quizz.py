@@ -118,4 +118,5 @@ with Hermes(MQTT_ADDR) as h:
         .subscribe_intent(INTENT_DOES_NOT_KNOW, user_does_not_know) \
         .subscribe_intent(INTENT_ANSWER, user_gives_answer) \
         .subscribe_session_ended(session_ended) \
+        .subscribe_session_started(session_started) \
         .start()
