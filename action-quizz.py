@@ -26,10 +26,10 @@ def user_request_quiz(hermes, intent_message):
     number_of_questions = 1
     tables = []
 
-    if intent_message.slots.number:
-        number_of_questions = intent_message.slots.number.value.value
-    if intent_message.slots.table:
-        tables = [intent_message.slots.table.value.value]
+    if intent_message.slots.number.first():
+        number_of_questions = intent_message.slots.number.first.value.value
+    if intent_message.slots.table.first:
+        tables = [intent_message.slots.table.first.value.value]
 
     session_state, sentence = tt.start_quiz(number_of_questions, tables)
 
@@ -45,8 +45,8 @@ def user_gives_answer(hermes, intent_message):
     session_id = intent_message.session_id
     session_state = SessionsStates.get(session_id)
 
-    if intent_message.slots.answer:
-        answer = intent_message.slots.answer.value.value
+    if intent_message.slots.answer.first:
+        answer = intent_message.slots.answer.first.value.value
 
     session_state, sentence, continues = tt.check_user_answer(session_state, answer)
 
