@@ -80,6 +80,22 @@ def user_quits(hermes, intent_message):
     hermes.publish_end_session(session_id, tt.terminate_early(SessionsStates, session_id))
 
 
+def session_started(hermes, session_started_message):
+    print("Session Started")
+
+    print("sessionID: {}".format(session_started_message.session_id))
+    print("session site ID: {}".format(session_started_message.site_id))
+    print("sessionID: {}".format(session_started_message.custom_data))
+
+    session_id = session_started_message.session_id
+    custom_data = session_started_message.custom_data
+
+    if custom_data:
+        if SessionsStates.get(custom_data):
+            SessionsStates[session_id] = SessionsStates[custom_data]
+            SessionsStates.pop(custom_data)
+
+
 def session_ended(hermes, session_ended_message):
     print("Session Ended")
     session_id = session_ended_message.session_id
@@ -92,7 +108,7 @@ def session_ended(hermes, session_ended_message):
             canBeEnqueued=False,
             intentFilter=INTENT_FILTER_GET_ANSWER
         )
-        hermes.publish_start_session(session_site_id, "action", init, None)
+        hermes.publish_start_session(session_site_id, "action", init, session_id)
 
 
 with Hermes(MQTT_ADDR) as h:
