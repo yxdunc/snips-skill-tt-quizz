@@ -1,5 +1,6 @@
 from hermes_python.hermes import Hermes
 import times_tables as tt
+import json
 
 
 MQTT_IP_ADDR = "localhost"
@@ -108,7 +109,7 @@ def session_ended(hermes, session_ended_message):
             canBeEnqueued=False,
             intentFilter=INTENT_FILTER_GET_ANSWER
         )
-        hermes.publish_start_session(session_site_id, 0, init, session_id)
+        hermes.publish_start_session(session_site_id, 0, json.dumps(init), session_id)
 
 
 with Hermes(MQTT_ADDR) as h:
