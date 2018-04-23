@@ -102,6 +102,7 @@ def session_ended(hermes, session_ended_message):
     session_id = session_ended_message.session_id
     session_site_id = session_ended_message.site_id
 
+    print("Do we even get there ?")
     if SessionsStates.get(session_id):
         init = dict(
             type="action",
