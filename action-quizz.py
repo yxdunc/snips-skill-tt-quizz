@@ -103,12 +103,12 @@ def session_ended(hermes, session_ended_message):
     session_site_id = session_ended_message.site_id
 
     print("Do we even get there ?")
-    # if SessionsStates.get(session_id):
-    #     hermes.publish_start_session_action(site_id=session_site_id,
-    #                                         session_init_text="",
-    #                                         session_init_intent_filter=INTENT_FILTER_GET_ANSWER,
-    #                                         session_init_can_be_enqueued=False,
-    #                                         custom_data=session_id)
+    if SessionsStates.get(session_id):
+        hermes.publish_start_session_action(site_id=session_site_id,
+                                            session_init_text="",
+                                            session_init_intent_filter=INTENT_FILTER_GET_ANSWER,
+                                            session_init_can_be_enqueued=False,
+                                            custom_data=session_id)
 
 
 with Hermes(MQTT_ADDR) as h:
