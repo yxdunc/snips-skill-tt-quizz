@@ -24,8 +24,8 @@ def start_quiz(nb_questions=5, tables=[]):
 
 def check_user_answer(session_state, answer):
     if session_state is None:
-        print "Error: session_state is None"
-        return session_state, "There is an error", False
+        print "Error: session_state is None ==> intent triggered outside of dialog session"
+        return session_state, "", False
 
     # We just try keep listening to the user until we get an answer
     if answer is None:
@@ -62,7 +62,7 @@ def _create_next_step(sentence, session_state):
         session_state["x"] = random.randint(0, 11)
         session_state["y"] = random.randint(0, 11)
 
-        if session_state.get("tables") is not None:
+        if session_state.get("tables"):
             tables = session_state["tables"]
             session_state["y"] = tables[random.randint(0, len(tables) - 1)]
 
